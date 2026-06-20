@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EeeBee — Set Availability</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">EeeBee Catching</span>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="calendar.html">Booking</a>
+  </div>
+  <div id="nav-auth"></div>
+</nav>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="admin-login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="window.location.href='index.html'">✕</button>
+    <div class="modal-logo">EeeBee Catching</div>
+    <h2>Coach Login</h2>
+    <p class="modal-sub">EeeBee's private availability management page.</p>
+    <div class="form-group">
+      <label for="admin-password">Admin Password</label>
+      <input type="password" id="admin-password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')handleAdminLogin()" />
+    </div>
+    <div class="form-error" id="admin-login-error">Incorrect password. Try again.</div>
+    <button class="btn btn-orange modal-btn" onclick="handleAdminLogin()">Sign In as Coach</button>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="admin-page" style="display:none">
+
+  <div class="page-hero">
+    <h1>Set Availability</h1>
+    <p>Toggle which time slots are open for booking each day. Customers can only book slots you enable.</p>
+    <div class="orange-line"></div>
+  </div>
+
+  <section class="section">
+    <div class="section-inner">
+
+      <div class="admin-layout">
+
+        <!-- LEFT: Week days -->
+        <div>
+          <div class="week-nav">
+            <button class="cal-nav-btn" onclick="changeWeek(-1)">&#8249;</button>
+            <h2 id="week-label">Week of June 9</h2>
+            <button class="cal-nav-btn" onclick="changeWeek(1)">&#8250;</button>
+          </div>
+          <p style="font-size:0.82rem;color:var(--gray);margin-bottom:1rem">Click a day to expand. Toggle slots on/off. Changes save instantly.</p>
+          <div id="day-cards"></div>
+        </div>
+
+        <!-- RIGHT: Sidebar stats -->
+        <div>
+          <div class="admin-sidebar">
+            <h3>This Week</h3>
+            <div class="admin-stat"><span class="stat-label">Days with availability</span><span class="stat-val" id="stat-days">0</span></div>
+            <div class="admin-stat"><span class="stat-label">Total open slots</span><span class="stat-val" id="stat-slots">0</span></div>
+            <div class="admin-stat"><span class="stat-label">Slots already booked</span><span class="stat-val" id="stat-booked">0</span></div>
+          </div>
+
+          <div class="admin-sidebar" style="margin-top:1rem">
+            <h3>Quick Actions</h3>
+            <div style="display:flex;flex-direction:column;gap:0.5rem">
+              <button class="btn btn-orange" style="font-size:0.82rem;padding:0.5rem 1rem" onclick="openAllWeek()">Open All Slots This Week</button>
+              <button class="btn" style="background:var(--light-gray);color:var(--black);font-size:0.82rem;padding:0.5rem 1rem" onclick="clearAllWeek()">Clear All Slots This Week</button>
+              <button class="btn" style="background:var(--light-gray);color:var(--black);font-size:0.82rem;padding:0.5rem 1rem" onclick="copyLastWeek()">Copy Last Week's Schedule</button>
+            </div>
+          </div>
+
+          <div class="admin-sidebar" style="margin-top:1rem">
+            <h3>All Upcoming Bookings</h3>
+            <div id="admin-bookings-list">
+              <p style="font-size:0.85rem;color:var(--gray)">No upcoming bookings.</p>
+            </div>
+          </div>
+
+          <div style="margin-top:1rem;text-align:center">
+            <button class="btn" style="background:var(--light-gray);color:var(--black);font-size:0.8rem;padding:0.4rem 1rem" onclick="adminLogout()">Sign Out of Admin</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-contact">📞 425-892-3018</div>
+  <p><strong>EeeBee Catching Lessons</strong> — Admin Panel</p>
+</footer>
+
+<script src="auth.js"></script>
+<script src="notifications.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

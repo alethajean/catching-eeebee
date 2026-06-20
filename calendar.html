@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EeeBee Catching Lessons — Booking</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">EeeBee Catching</span>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="calendar.html" class="active">Booking</a>
+  </div>
+  <div id="nav-auth"></div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<div class="page-hero">
+  <h1>Book a Session</h1>
+  <p>Sign in to view availability and reserve your spot.</p>
+  <div class="orange-line"></div>
+</div>
+
+<!-- ===== LOGIN MODAL (shown over the booking section when not logged in) ===== -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLoginAndGoHome()">✕</button>
+    <div class="modal-logo">EeeBee Catching</div>
+    <h2 id="modal-title">Sign In to Book</h2>
+    <p class="modal-sub" id="modal-sub">You need a free account to reserve a session.</p>
+
+    <div id="form-login">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+      </div>
+      <div class="form-error" id="login-error">Incorrect email or password. Please try again.</div>
+      <button class="btn btn-orange modal-btn" onclick="handleLogin()">Sign In</button>
+      <div class="modal-toggle">Don't have an account? <a onclick="switchToRegister()">Create one free</a></div>
+      <div style="text-align:center;margin-top:0.5rem">
+        <a onclick="switchToForgot()" style="font-size:0.8rem;color:var(--gray);cursor:pointer;text-decoration:underline">Forgot your password?</a>
+      </div>
+    </div>
+
+    <!-- Forgot password -->
+    <div id="form-forgot" style="display:none">
+      <div id="forgot-step-email">
+        <p style="font-size:0.85rem;color:var(--gray);margin-bottom:1rem">Enter the email on your account and we'll let you set a new password.</p>
+        <div class="form-group">
+          <label for="forgot-email">Email Address</label>
+          <input type="email" id="forgot-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')lookupForgotEmail()" />
+        </div>
+        <div class="form-error" id="forgot-email-error"></div>
+        <button class="btn btn-orange modal-btn" onclick="lookupForgotEmail()">Continue</button>
+      </div>
+      <div id="forgot-step-reset" style="display:none">
+        <p style="font-size:0.85rem;color:var(--gray);margin-bottom:1rem">Account found! Enter your new password below.</p>
+        <div class="form-group">
+          <label for="forgot-new-pw">New Password</label>
+          <input type="password" id="forgot-new-pw" placeholder="At least 6 characters" />
+        </div>
+        <div class="form-group">
+          <label for="forgot-confirm-pw">Confirm New Password</label>
+          <input type="password" id="forgot-confirm-pw" placeholder="Re-enter new password" onkeydown="if(event.key==='Enter')doForgotReset()" />
+        </div>
+        <div class="form-error" id="forgot-reset-error"></div>
+        <button class="btn btn-orange modal-btn" onclick="doForgotReset()">Set New Password</button>
+      </div>
+      <div class="modal-toggle" style="margin-top:0.75rem">Remember it? <a onclick="switchToLogin()">Back to sign in</a></div>
+    </div>
+
+    <div id="form-register" style="display:none">
+      <div class="form-group">
+        <label for="reg-name">Full Name</label>
+        <input type="text" id="reg-name" placeholder="Jane Smith" />
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" placeholder="At least 6 characters" />
+      </div>
+
+      <!-- Notification preference -->
+      <div class="form-group">
+        <label>Reminders &amp; Notifications</label>
+        <div class="notif-options">
+          <label class="notif-option">
+            <input type="radio" name="notif-method" value="email" checked onchange="updateNotifFields()" /> Email
+          </label>
+          <label class="notif-option">
+            <input type="radio" name="notif-method" value="text" onchange="updateNotifFields()" /> Text (SMS)
+          </label>
+          <label class="notif-option">
+            <input type="radio" name="notif-method" value="both" onchange="updateNotifFields()" /> Both
+          </label>
+          <label class="notif-option">
+            <input type="radio" name="notif-method" value="none" onchange="updateNotifFields()" /> None
+          </label>
+        </div>
+      </div>
+
+      <!-- Phone field — shown when text or both selected -->
+      <div id="phone-fields" style="display:none">
+        <div class="form-group">
+          <label for="reg-phone">Mobile Phone Number</label>
+          <input type="tel" id="reg-phone" placeholder="425-123-4567" />
+        </div>
+      </div>
+
+      <div class="form-error" id="reg-error">Please fill all fields correctly.</div>
+      <button class="btn btn-orange modal-btn" onclick="handleRegister()">Create Account</button>
+      <div class="modal-toggle">Already have an account? <a onclick="switchToLogin()">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOOKING CALENDAR (shown when logged in) ===== -->
+<div id="calendar-page" style="display:none">
+  <section class="section" style="padding-top:3rem">
+    <div class="section-inner">
+      <div class="calendar-layout">
+
+        <!-- LEFT: Calendar -->
+        <div>
+          <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;margin-bottom:1rem">
+            <div class="cal-header">
+              <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+              <h2 id="cal-month-label">June 2026</h2>
+              <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+          <div style="display:flex;gap:1.25rem;font-size:0.8rem;color:var(--gray);flex-wrap:wrap">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);margin-right:4px;vertical-align:middle"></span>Open slots</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--orange);margin-right:4px;vertical-align:middle"></span>Fully booked</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;border:2px solid var(--orange);margin-right:4px;vertical-align:middle"></span>Today</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f0f0f0;border:1px solid #ddd;margin-right:4px;vertical-align:middle"></span>No availability set</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: Slots + Confirm -->
+        <div>
+          <div class="time-slots-panel">
+            <h3 id="slots-header">Select a date to see available times</h3>
+            <div class="time-slots" id="time-slots">
+              <p style="font-size:0.85rem;color:var(--gray);text-align:center;padding:1rem 0">← Choose a date on the calendar</p>
+            </div>
+          </div>
+
+          <div class="confirm-panel" id="confirm-panel" style="display:none">
+            <h3>Confirm Your Booking</h3>
+            <p class="confirm-detail"><strong>Date:</strong> <span id="confirm-date"></span></p>
+            <p class="confirm-detail"><strong>Time:</strong> <span id="confirm-time"></span></p>
+            <p class="confirm-detail"><strong>Duration:</strong> 60 minutes</p>
+            <p class="confirm-detail"><strong>Location:</strong> 📍 <span id="confirm-location"></span></p>
+            <p class="confirm-detail"><strong>Booked as:</strong> <span id="confirm-user"></span></p>
+            <div id="confirm-players-wrap" style="display:none;margin-top:0.75rem">
+              <p style="font-size:0.82rem;font-weight:700;color:var(--black);margin-bottom:0.4rem">Who's attending?</p>
+              <div id="confirm-players-list" style="display:flex;flex-direction:column;gap:0.35rem"></div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--gray);margin-top:0.75rem">
+              Once confirmed this slot is locked. Questions? Call <strong>425-892-3018</strong>.
+            </p>
+            <div class="confirm-actions">
+              <button class="btn btn-confirm" onclick="confirmBooking()">✓ Confirm Booking</button>
+              <button class="btn btn-cancel-slot" onclick="cancelSelection()">Cancel</button>
+            </div>
+          </div>
+
+          <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;margin-top:1rem">
+            <h3 style="font-size:0.9rem;font-weight:900;text-transform:uppercase;letter-spacing:0.06em;color:var(--black);margin-bottom:0.75rem">My Upcoming Bookings</h3>
+            <div id="my-bookings">
+              <p style="font-size:0.85rem;color:var(--gray)">No bookings yet.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-contact">📞 425-892-3018</div>
+  <p><strong>EeeBee Catching Lessons</strong></p>
+  <p style="margin-top:0.4rem">© 2026 EeeBee Catching Lessons. All rights reserved.</p>
+</footer>
+
+<script src="auth.js"></script>
+<script src="notifications.js"></script>
+<script src="calendar.js"></script>
+<script>
+function closeLoginAndGoHome() {
+  document.getElementById('login-modal').classList.add('hidden');
+}
+</script>
+</body>
+</html>

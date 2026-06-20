@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EeeBee Catching Lessons — My Profile</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">EeeBee Catching</span>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="calendar.html">Booking</a>
+  </div>
+  <div id="nav-auth"></div>
+</nav>
+
+<!-- Redirect to home if not logged in -->
+<div id="profile-page" style="display:none">
+
+  <div class="page-hero">
+    <h1>My Profile</h1>
+    <p>Update your account info and manage your players.</p>
+    <div class="orange-line"></div>
+  </div>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="profile-layout">
+
+        <!-- LEFT: Account Info -->
+        <div>
+          <div class="profile-card">
+            <h2 class="profile-section-title">Account Information</h2>
+            <div class="orange-line"></div>
+
+            <div class="form-group">
+              <label for="p-name">Full Name</label>
+              <input type="text" id="p-name" />
+            </div>
+            <div class="form-group">
+              <label for="p-email">Email</label>
+              <input type="email" id="p-email" />
+            </div>
+            <div class="form-group">
+              <label for="p-phone">Mobile Phone <span style="font-weight:400;color:var(--gray)">(optional)</span></label>
+              <input type="tel" id="p-phone" placeholder="425-123-4567" />
+            </div>
+
+            <div class="form-group">
+              <label>Reminders &amp; Notifications</label>
+              <div class="notif-options">
+                <label class="notif-option"><input type="radio" name="p-notif" value="email" /> Email</label>
+                <label class="notif-option"><input type="radio" name="p-notif" value="text"  /> Text (SMS)</label>
+                <label class="notif-option"><input type="radio" name="p-notif" value="both"  /> Both</label>
+                <label class="notif-option"><input type="radio" name="p-notif" value="none"  /> None</label>
+              </div>
+            </div>
+
+            <div class="profile-save-row">
+              <button class="btn btn-orange" onclick="saveAccountInfo()">Save Changes</button>
+              <span class="profile-save-msg" id="account-saved-msg"></span>
+            </div>
+          </div>
+
+          <!-- Change Password -->
+          <div class="profile-card" style="margin-top:1.25rem">
+            <h2 class="profile-section-title">Change Password</h2>
+            <div class="orange-line"></div>
+            <div class="form-group">
+              <label for="p-pw-current">Current Password</label>
+              <input type="password" id="p-pw-current" placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label for="p-pw-new">New Password</label>
+              <input type="password" id="p-pw-new" placeholder="At least 6 characters" />
+            </div>
+            <div class="form-group">
+              <label for="p-pw-confirm">Confirm New Password</label>
+              <input type="password" id="p-pw-confirm" placeholder="Re-enter new password" />
+            </div>
+            <div class="form-error" id="pw-error"></div>
+            <div class="profile-save-row">
+              <button class="btn btn-black" onclick="changePassword()">Update Password</button>
+              <span class="profile-save-msg" id="pw-saved-msg"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Players -->
+        <div>
+          <div class="profile-card">
+            <h2 class="profile-section-title">My Players</h2>
+            <div class="orange-line"></div>
+            <p style="font-size:0.88rem;color:var(--gray);margin-bottom:1.25rem">
+              Add the names of the players you book sessions for (your kids, teammates, etc.).
+              Their name will appear on the booking.
+            </p>
+
+            <div id="players-list" style="margin-bottom:1rem"></div>
+
+            <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+              <input type="text" id="new-player-name"
+                placeholder="Player's full name"
+                style="flex:2;min-width:140px;padding:0.65rem 1rem;border-radius:6px;border:1.5px solid var(--light-gray);font-size:0.9rem;font-family:var(--font)"
+                onkeydown="if(event.key==='Enter')addPlayer()"
+              />
+              <input type="number" id="new-player-age"
+                placeholder="Age"
+                min="1" max="99"
+                style="width:72px;padding:0.65rem 0.75rem;border-radius:6px;border:1.5px solid var(--light-gray);font-size:0.9rem;font-family:var(--font)"
+                onkeydown="if(event.key==='Enter')addPlayer()"
+              />
+              <button class="btn btn-orange" style="padding:0.65rem 1.1rem;white-space:nowrap" onclick="addPlayer()">+ Add</button>
+            </div>
+            <div class="form-error" id="player-error" style="margin-top:0.4rem"></div>
+          </div>
+
+          <!-- Quick links -->
+          <div class="profile-card" style="margin-top:1.25rem">
+            <h2 class="profile-section-title">Quick Links</h2>
+            <div class="orange-line"></div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem">
+              <a href="calendar.html" class="btn btn-orange" style="text-align:center">Book a Session</a>
+              <button class="btn" style="background:var(--light-gray);color:var(--black);text-align:center" onclick="logout();window.location.href='index.html'">Sign Out</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-contact">📞 425-892-3018</div>
+  <p><strong>EeeBee Catching Lessons</strong></p>
+  <p style="margin-top:0.4rem">© 2026 EeeBee Catching Lessons. All rights reserved.</p>
+</footer>
+
+<script src="auth.js"></script>
+<script src="notifications.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const session = getSession();
+  if (!session) { window.location.href = 'calendar.html'; return; }
+  document.getElementById('profile-page').style.display = 'block';
+  loadProfileForm(session);
+});
+
+function loadProfileForm(session) {
+  const users = getUsers();
+  const user  = users.find(u => u.email === session.email);
+  if (!user) return;
+
+  document.getElementById('p-name').value  = user.name  || '';
+  document.getElementById('p-email').value = user.email || '';
+  document.getElementById('p-phone').value = user.phone || '';
+
+  const method = user.notifMethod || 'email';
+  const radio  = document.querySelector(`input[name="p-notif"][value="${method}"]`);
+  if (radio) radio.checked = true;
+
+  renderPlayers(user);
+}
+
+function saveAccountInfo() {
+  const session = getSession();
+  const users   = getUsers();
+  const idx     = users.findIndex(u => u.email === session.email);
+  if (idx === -1) return;
+
+  const newName   = document.getElementById('p-name').value.trim();
+  const newEmail  = document.getElementById('p-email').value.trim().toLowerCase();
+  const newPhone  = document.getElementById('p-phone').value.trim();
+  const newNotif  = document.querySelector('input[name="p-notif"]:checked')?.value || 'email';
+
+  if (!newName || !newEmail) {
+    showProfileMsg('account-saved-msg', 'Name and email are required.', true);
+    return;
+  }
+  // Check email not taken by another user
+  if (newEmail !== session.email && users.find(u => u.email === newEmail)) {
+    showProfileMsg('account-saved-msg', 'That email is already in use.', true);
+    return;
+  }
+
+  users[idx] = { ...users[idx], name: newName, email: newEmail, phone: newPhone, notifMethod: newNotif };
+  saveUsers(users);
+  saveSession({ name: newName, email: newEmail });
+  renderNavAuth();
+  showProfileMsg('account-saved-msg', '✓ Saved!', false);
+}
+
+function changePassword() {
+  const session = getSession();
+  const users   = getUsers();
+  const idx     = users.findIndex(u => u.email === session.email);
+  const errEl   = document.getElementById('pw-error');
+  errEl.classList.remove('show');
+
+  const current  = document.getElementById('p-pw-current').value;
+  const next     = document.getElementById('p-pw-new').value;
+  const confirm  = document.getElementById('p-pw-confirm').value;
+
+  if (users[idx].password !== current) {
+    errEl.textContent = 'Current password is incorrect.'; errEl.classList.add('show'); return;
+  }
+  if (next.length < 6) {
+    errEl.textContent = 'New password must be at least 6 characters.'; errEl.classList.add('show'); return;
+  }
+  if (next !== confirm) {
+    errEl.textContent = 'Passwords do not match.'; errEl.classList.add('show'); return;
+  }
+
+  users[idx].password = next;
+  saveUsers(users);
+  document.getElementById('p-pw-current').value = '';
+  document.getElementById('p-pw-new').value     = '';
+  document.getElementById('p-pw-confirm').value = '';
+  showProfileMsg('pw-saved-msg', '✓ Password updated!', false);
+}
+
+// ===== PLAYERS =====
+function getPlayerList(email) {
+  const users = getUsers();
+  const user  = users.find(u => u.email === email);
+  return user?.players || [];
+}
+function savePlayers(email, players) {
+  const users = getUsers();
+  const idx   = users.findIndex(u => u.email === email);
+  if (idx === -1) return;
+  users[idx].players = players;
+  saveUsers(users);
+}
+
+function renderPlayers(user) {
+  const container = document.getElementById('players-list');
+  const players   = user.players || [];
+  if (players.length === 0) {
+    container.innerHTML = '<p style="font-size:0.85rem;color:var(--gray)">No players added yet.</p>';
+    return;
+  }
+  container.innerHTML = players.map((p, i) => {
+    // Support both old string format and new object format
+    const name    = typeof p === 'object' ? p.name : p;
+    const age     = typeof p === 'object' ? p.age  : null;
+    const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const ageBadge = age ? `<span class="player-age-badge">Age ${age}</span>` : '';
+    return `
+      <div class="player-row">
+        <div class="player-avatar">${initials}</div>
+        <div style="flex:1">
+          <span class="player-name">${name}</span>
+          ${ageBadge}
+        </div>
+        <button class="player-remove-btn" onclick="removePlayer(${i})" title="Remove">✕</button>
+      </div>`;
+  }).join('');
+}
+
+function addPlayer() {
+  const nameInput = document.getElementById('new-player-name');
+  const ageInput  = document.getElementById('new-player-age');
+  const errEl     = document.getElementById('player-error');
+  const name      = nameInput.value.trim();
+  const age       = ageInput.value.trim();
+  errEl.classList.remove('show');
+
+  if (!name) {
+    errEl.textContent = 'Please enter a player name.'; errEl.classList.add('show'); return;
+  }
+  const session = getSession();
+  const players = getPlayerList(session.email);
+  if (players.some(p => (typeof p === 'object' ? p.name : p) === name)) {
+    errEl.textContent = 'That player is already on your list.'; errEl.classList.add('show'); return;
+  }
+  players.push({ name, age: age ? parseInt(age) : null });
+  savePlayers(session.email, players);
+  nameInput.value = '';
+  ageInput.value  = '';
+
+  const users = getUsers();
+  const user  = users.find(u => u.email === session.email);
+  renderPlayers(user);
+}
+
+function removePlayer(idx) {
+  const session = getSession();
+  const players = getPlayerList(session.email);
+  players.splice(idx, 1);
+  savePlayers(session.email, players);
+  const users = getUsers();
+  const user  = users.find(u => u.email === session.email);
+  renderPlayers(user);
+}
+
+function showProfileMsg(id, msg, isError) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.color = isError ? 'var(--red)' : 'var(--green)';
+  el.style.fontWeight = '700';
+  el.style.fontSize   = '0.82rem';
+  setTimeout(() => el.textContent = '', 3000);
+}
+</script>
+</body>
+</html>

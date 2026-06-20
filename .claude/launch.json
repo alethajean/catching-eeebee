@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "softball-catching",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3456", "C:\\Users\\jeani\\OneDrive\\Documents\\Claudes World\\softball-catching"],
+      "port": 3456
+    }
+  ]
+}
