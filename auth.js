@@ -154,7 +154,7 @@ function renderNavAuth() {
         <button class="logout-btn" onclick="logout()">Sign Out</button>
       </div>`;
   } else {
-    container.innerHTML = `<a href="https://coach-book-sandy.vercel.app/eeebee/book" class="btn btn-orange" style="font-size:0.8rem;padding:0.4rem 1rem;letter-spacing:0.05em">Book Now</a>`;
+    container.innerHTML = ``;
   }
 }
 
