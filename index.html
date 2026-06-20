@@ -134,32 +134,8 @@
     <p style="color:var(--orange);font-size:0.78rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem">Simple Pricing</p>
     <h2 class="section-title" style="color:var(--white)">Session Rates</h2>
     <div class="orange-line"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:700px;margin:2rem auto 0">
-      <div class="rate-card featured" style="text-align:center">
-        <div class="rate-title">Standard Rate</div>
-        <div class="rate-price">$40 <span>/ person / hr</span></div>
-        <div class="rate-desc">1–7 players per session. Private or small group instruction.</div>
-        <ul class="rate-features" style="text-align:left">
-          <li>Any group up to 7 players</li>
-          <li>Personalized instruction</li>
-          <li>All ages &amp; skill levels</li>
-          <li>60-minute sessions</li>
-        </ul>
-        <a href="https://coach-book-sandy.vercel.app/eeebee/book" class="btn btn-orange" style="width:100%;text-align:center">Book Now</a>
-      </div>
-      <div class="rate-card" style="text-align:center;position:relative">
-        <div class="rate-badge">Group Discount</div>
-        <div class="rate-title">Group Rate</div>
-        <div class="rate-price">$20 <span>/ person / hr</span></div>
-        <div class="rate-desc">8 or more players. Half price — bring your whole team.</div>
-        <ul class="rate-features" style="text-align:left">
-          <li>8+ players per session</li>
-          <li>Team &amp; clinic format</li>
-          <li>Station-based drills</li>
-          <li>60-minute sessions</li>
-        </ul>
-        <a href="https://coach-book-sandy.vercel.app/eeebee/book" class="btn btn-orange" style="width:100%;text-align:center">Book Now</a>
-      </div>
+    <div id="rates-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;max-width:700px;margin:2rem auto 0">
+      <p style="color:rgba(255,255,255,0.4);font-size:0.85rem">Loading rates…</p>
     </div>
     <p style="text-align:center;font-size:0.82rem;color:rgba(255,255,255,0.5);margin-top:1.25rem">
       Questions? Call or text EeeBee at <strong style="color:var(--white)">425-892-3018</strong>
@@ -193,5 +169,48 @@
 </footer>
 
 <script src="auth.js"></script>
+<script>
+(async function loadRates() {
+  const SUPABASE_URL = "https://sadvwxjuvwbvijevjhkj.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_kWQezDxyZxhYL3AvuuyX9w_CcaOSoVW";
+  const BOOK_URL = "https://coach-book-sandy.vercel.app/eeebee/book";
+
+  try {
+    // Get eeebee's business id
+    const bizRes = await fetch(`${SUPABASE_URL}/rest/v1/businesses?slug=eq.eeebee&select=id`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const [biz] = await bizRes.json();
+    if (!biz) return;
+
+    // Get her rates
+    const ratesRes = await fetch(`${SUPABASE_URL}/rest/v1/rates?business_id=eq.${biz.id}&select=*&order=price_cents.asc`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const rates = await ratesRes.json();
+    if (!rates.length) return;
+
+    const grid = document.getElementById("rates-grid");
+    grid.innerHTML = rates.map((r, i) => {
+      const price = (r.price_cents / 100).toFixed(0);
+      const players = r.max_players
+        ? (r.min_players === r.max_players ? `${r.min_players} players` : `${r.min_players}–${r.max_players} players`)
+        : `${r.min_players}+ players`;
+      const featured = i === 0 ? " featured" : "";
+      return `
+        <div class="rate-card${featured}" style="text-align:center">
+          <div class="rate-title">${r.name}</div>
+          <div class="rate-price">$${price} <span>/ person / hr</span></div>
+          <div class="rate-desc">${r.description || players}</div>
+          <ul class="rate-features" style="text-align:left">
+            <li>${players}</li>
+            <li>60-minute sessions</li>
+          </ul>
+          <a href="${BOOK_URL}" class="btn btn-orange" style="width:100%;text-align:center">Book Now</a>
+        </div>`;
+    }).join("");
+  } catch(e) { console.error("Failed to load rates", e); }
+})();
+</script>
 </body>
 </html>
