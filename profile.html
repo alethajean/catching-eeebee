@@ -12,7 +12,7 @@
   <span class="nav-brand">EeeBee Catching</span>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="calendar.html">Booking</a>
+    <a href="https://coach-book-sandy.vercel.app/eeebee/book">Booking</a>
   </div>
   <div id="nav-auth"></div>
 </nav>
@@ -123,7 +123,7 @@
             <h2 class="profile-section-title">Quick Links</h2>
             <div class="orange-line"></div>
             <div style="display:flex;flex-direction:column;gap:0.75rem">
-              <a href="calendar.html" class="btn btn-orange" style="text-align:center">Book a Session</a>
+              <a href="https://coach-book-sandy.vercel.app/eeebee/book" class="btn btn-orange" style="text-align:center">Book a Session</a>
               <button class="btn" style="background:var(--light-gray);color:var(--black);text-align:center" onclick="logout();window.location.href='index.html'">Sign Out</button>
             </div>
           </div>
@@ -146,7 +146,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const session = getSession();
-  if (!session) { window.location.href = 'calendar.html'; return; }
+  if (!session) { window.location.href = 'https://coach-book-sandy.vercel.app/eeebee/book'; return; }
   document.getElementById('profile-page').style.display = 'block';
   loadProfileForm(session);
 });
